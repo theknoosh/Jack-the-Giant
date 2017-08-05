@@ -32,4 +32,4 @@ public class GameMain extends Game {
 	public SpriteBatch getBatch(){
 		return this.batch;
 	}
-}
+} // GameMain
