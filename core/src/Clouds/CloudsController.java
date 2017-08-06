@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.Array;
 import java.util.Random;
 
 import Helpers.GameInfo;
+import player.Player;
 
 /**
  * Created by Darrell Payne on 8/4/17.
@@ -110,6 +111,11 @@ public class CloudsController {
 
     public void setCameraY(float cameraY){
         this.cameraY = cameraY;
+    }
+
+    public Player positionThePlayer(Player player){
+        player = new Player(world, clouds.get(0).getX(), clouds.get(0).getY() + 100);
+        return player;
     }
 
     private float randomBetweenNumbers(float min, float max){

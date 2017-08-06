@@ -1,6 +1,7 @@
 package Scenes;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -16,6 +17,7 @@ import com.sanctuaryofdarkness.jackthegiant.GameMain;
 import Clouds.Cloud;
 import Clouds.CloudsController;
 import Helpers.GameInfo;
+import player.Player;
 
 /**
  * Created by Darrell Payne on 8/3/17.
@@ -37,6 +39,8 @@ public class Gameplay implements Screen {
 
     private CloudsController cloudsController;
 
+    private Player player;
+
     public Gameplay(GameMain game){
         this.game = game;
         mainCamera = new OrthographicCamera(GameInfo.WIDTH,GameInfo.HEIGHT);
@@ -52,11 +56,24 @@ public class Gameplay implements Screen {
 
         cloudsController = new CloudsController(world);
 
+        player = cloudsController.positionThePlayer(player);
+
         createBackgrounds();
     }
 
+    void handleInput(float dt){
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)){
+            player.movePlayer(-2);
+        } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
+            player.movePlayer(2);
+        }else {
+            player.setWalking(false);
+        }
+    }
+
     void update(float dt){
-        moveCamera();
+        handleInput(dt);
+//        moveCamera();
         checkBackgroundsOutOfBounds();
         cloudsController.setCameraY(mainCamera.position.y);
         cloudsController.createAndArrangeClouds();
@@ -107,13 +124,18 @@ public class Gameplay implements Screen {
         game.getBatch().begin();
         drawBackgrounds();
         cloudsController.drawClouds(game.getBatch());
+        player.drawPlayerIdle(game.getBatch());
+        player.drawPlayerAnimation(game.getBatch());
 
         game.getBatch().end();
 
-//        debugRenderer.render(world, box2DCamera.combined);
+        debugRenderer.render(world, box2DCamera.combined);
 
         game.getBatch().setProjectionMatrix(mainCamera.combined);
         mainCamera.update();
+
+        player.updatePlayer();
+        world.step(Gdx.graphics.getDeltaTime(), 6, 2);
 
     }
 
