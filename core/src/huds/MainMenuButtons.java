@@ -17,6 +17,7 @@ import com.sanctuaryofdarkness.jackthegiant.GameMain;
 import Helpers.GameInfo;
 import Scenes.Gameplay;
 import Scenes.Highscore;
+import Scenes.Options;
 
 /**
  * Created by Darrell Payne on 8/6/17.
@@ -89,7 +90,7 @@ public class MainMenuButtons {
         optionsBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                System.out.println("Play buttons was pressed");
+                game.setScreen(new Options(game));
             }
         });
 

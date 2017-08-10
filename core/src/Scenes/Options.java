@@ -10,35 +10,34 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sanctuaryofdarkness.jackthegiant.GameMain;
 
 import Helpers.GameInfo;
-import huds.HighscoreButtons;
+import huds.OptionsButtons;
 
 /**
- * Created by Darrell Payne on 8/7/17.
+ * Created by Darrell Payne on 8/10/17.
  */
 
-public class Highscore implements Screen{
+public class Options implements Screen{
 
     private GameMain game;
     private OrthographicCamera mainCamera;
     private Viewport gameViewport;
 
+    private OptionsButtons btns;
+
     private Texture bg;
 
-    private HighscoreButtons btns;
+    public Options(GameMain game){
 
-    public Highscore(GameMain game){
         this.game = game;
-
         mainCamera = new OrthographicCamera();
-        mainCamera.setToOrtho(false, GameInfo.WIDTH, GameInfo.HEIGHT);
-        mainCamera.position.set(GameInfo.WIDTH,GameInfo.HEIGHT,0);
+        mainCamera.setToOrtho(false, GameInfo.WIDTH,GameInfo.HEIGHT);
+        mainCamera.position.set(GameInfo.WIDTH / 2f,GameInfo.HEIGHT / 2f, 0);
 
-        gameViewport = new StretchViewport(GameInfo.WIDTH, GameInfo.HEIGHT, mainCamera);
-        bg = new Texture("Backgrounds/Highscore BG.png");
+        gameViewport = new StretchViewport(GameInfo.WIDTH, GameInfo.HEIGHT,mainCamera);
 
-        btns = new HighscoreButtons(game);
+        bg = new Texture("Backgrounds/Options BG.png");
 
-
+        btns = new OptionsButtons(game);
     }
 
     @Override
@@ -48,6 +47,7 @@ public class Highscore implements Screen{
 
     @Override
     public void render(float delta) {
+
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -57,11 +57,12 @@ public class Highscore implements Screen{
 
         game.getBatch().setProjectionMatrix(btns.getStage().getCamera().combined);
         btns.getStage().draw();
+
     }
 
     @Override
     public void resize(int width, int height) {
-
+        gameViewport.update(width,height);
     }
 
     @Override
@@ -80,9 +81,16 @@ public class Highscore implements Screen{
     }
 
     @Override
-    public void dispose()
-    {
+    public void dispose() {
         bg.dispose();
         btns.getStage().dispose();
     }
-} // Highscore
+} // Options
+
+
+
+
+
+
+
+
