@@ -17,6 +17,7 @@ import com.sanctuaryofdarkness.jackthegiant.GameMain;
 import Clouds.Cloud;
 import Clouds.CloudsController;
 import Helpers.GameInfo;
+import huds.UIHud;
 import player.Player;
 
 /**
@@ -37,6 +38,8 @@ public class Gameplay implements Screen {
     private Viewport gameViewPort;
     private float lastYPosition;
 
+    UIHud hud;
+
     private CloudsController cloudsController;
 
     private Player player;
@@ -52,6 +55,9 @@ public class Gameplay implements Screen {
         box2DCamera.position.set(GameInfo.WIDTH / 2, GameInfo.HEIGHT / 2, 0);
 
         debugRenderer = new Box2DDebugRenderer();
+
+        hud = new UIHud(game);
+
         world = new World(new Vector2(0,-9.8f), true);
 
         cloudsController = new CloudsController(world);
@@ -134,6 +140,9 @@ public class Gameplay implements Screen {
         game.getBatch().setProjectionMatrix(mainCamera.combined);
         mainCamera.update();
 
+        game.getBatch().setProjectionMatrix(hud.getStage().getCamera().combined);
+        hud.getStage().draw();
+
         player.updatePlayer();
         world.step(Gdx.graphics.getDeltaTime(), 6, 2);
 
@@ -141,7 +150,7 @@ public class Gameplay implements Screen {
 
     @Override
     public void resize(int width, int height) {
-
+        gameViewPort.update(width,height);
     }
 
     @Override
