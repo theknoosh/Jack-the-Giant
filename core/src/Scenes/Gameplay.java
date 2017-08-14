@@ -9,6 +9,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.ContactImpulse;
+import com.badlogic.gdx.physics.box2d.ContactListener;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -24,7 +29,7 @@ import player.Player;
  * Created by Darrell Payne on 8/3/17.
  */
 
-public class Gameplay implements Screen {
+public class Gameplay implements Screen, ContactListener {
 
     private GameMain game;
     private Sprite[] bgs; // Array of backgrounds
@@ -59,6 +64,7 @@ public class Gameplay implements Screen {
         hud = new UIHud(game);
 
         world = new World(new Vector2(0,-9.8f), true);
+        world.setContactListener(this);
 
         cloudsController = new CloudsController(world);
 
@@ -129,7 +135,10 @@ public class Gameplay implements Screen {
 
         game.getBatch().begin();
         drawBackgrounds();
+
         cloudsController.drawClouds(game.getBatch());
+        cloudsController.drawCollectables(game.getBatch());
+
         player.drawPlayerIdle(game.getBatch());
         player.drawPlayerAnimation(game.getBatch());
 
@@ -176,5 +185,47 @@ public class Gameplay implements Screen {
         }
         player.getTexture().dispose();
         debugRenderer.dispose();
+    }
+
+    @Override
+    public void beginContact(Contact contact) {
+        Fixture playerBody, collectable;
+
+        if (contact.getFixtureA().getUserData() == "Player"){
+            playerBody = contact.getFixtureA();
+            collectable = contact.getFixtureB();
+        } else {
+            playerBody = contact.getFixtureB();
+            collectable = contact.getFixtureA();
+        }
+
+        if (collectable.getUserData() == "Coin"){
+            // Collided with coin
+            System.out.println("COIN");
+            collectable.setUserData("Remove");
+            cloudsController.removeCollectables();
+        }
+        if (collectable.getUserData() == "Life"){
+            // Collided with life
+            System.out.println("LIFE");
+            collectable.setUserData("Remove");
+            cloudsController.removeCollectables();
+        }
+
+    }
+
+    @Override
+    public void endContact(Contact contact) {
+
+    }
+
+    @Override
+    public void preSolve(Contact contact, Manifold oldManifold) {
+
+    }
+
+    @Override
+    public void postSolve(Contact contact, ContactImpulse impulse) {
+
     }
 } // Gameplay
