@@ -85,10 +85,11 @@ public class Gameplay implements Screen, ContactListener {
 
     void update(float dt){
         handleInput(dt);
-//        moveCamera();
+        moveCamera();
         checkBackgroundsOutOfBounds();
         cloudsController.setCameraY(mainCamera.position.y);
         cloudsController.createAndArrangeClouds();
+        cloudsController.removeOffScreenCollectables();
     }
 
     private void moveCamera(){
@@ -144,13 +145,13 @@ public class Gameplay implements Screen, ContactListener {
 
         game.getBatch().end();
 
-        debugRenderer.render(world, box2DCamera.combined);
-
-        game.getBatch().setProjectionMatrix(mainCamera.combined);
-        mainCamera.update();
+//        debugRenderer.render(world, box2DCamera.combined);
 
         game.getBatch().setProjectionMatrix(hud.getStage().getCamera().combined);
         hud.getStage().draw();
+
+        game.getBatch().setProjectionMatrix(mainCamera.combined);
+        mainCamera.update();
 
         player.updatePlayer();
         world.step(Gdx.graphics.getDeltaTime(), 6, 2);

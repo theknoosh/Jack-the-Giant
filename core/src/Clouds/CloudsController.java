@@ -87,13 +87,29 @@ public class CloudsController {
                 c.setSpritePosition(tempX,positionY);
                 positionY -= DISTANCE_BETWEEN_CLOUDS;
                 lastCloudPositionY = positionY;
-            }
-        }
 
-        // Remove this later, only test
-        Collectable c1 = new Collectable(world, "Coin");
-        c1.setCollectablePosition(clouds.get(1).getX(), clouds.get(1).getY() + 40);
-        collectables.add(c1);
+                if (!firstTimeArranging && c.getCloudName() != "Dark Cloud"){
+
+                    int rand = random.nextInt(10);
+                    if (rand > 1){
+                        int randomCollectable = random.nextInt(2); // 0 or 1
+                        if (randomCollectable == 0){
+                            // spawn a life, if the life count is lower than 2
+                            Collectable collectable = new Collectable(world, "Life");
+                            collectable.setCollectablePosition(c.getX(), c.getY() + 40);
+                            collectables.add(collectable);
+                        } else {
+                            // spawn a coin
+                            Collectable collectable = new Collectable(world, "Coin");
+                            collectable.setCollectablePosition(c.getX(), c.getY() + 40);
+                            collectables.add(collectable);
+                        }
+
+                    }
+                }
+            }
+//            System.out.println("Cloud drawn");
+        }
     }
 
     public void drawClouds(SpriteBatch batch){
@@ -134,6 +150,16 @@ public class CloudsController {
         }
     }
 
+    public void removeOffScreenCollectables(){
+        for (int i = 0; i < collectables.size; i++){
+            if ((collectables.get(i).getY() - GameInfo.HEIGHT / 2 - 15) > cameraY){ //Collectable is off screen
+                collectables.get(i).getTexture().dispose();
+                collectables.removeIndex(i);
+                System.out.println("Collectable removed");
+            }
+        }
+    }
+
     public void setCameraY(float cameraY){
         this.cameraY = cameraY;
     }
@@ -146,5 +172,6 @@ public class CloudsController {
     private float randomBetweenNumbers(float min, float max){
         return random.nextFloat() * (max - min) + min;
     }
+
 
 } // Clouds Controller
