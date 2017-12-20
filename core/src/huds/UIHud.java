@@ -95,7 +95,7 @@ public class UIHud {
     }
 
     void createBtnAndAddlistener(){
-        pauseBtn = new ImageButton(new SpriteDrawable(new Sprite(new Texture("Buttons/Gameplay/Pause.png"))));
+        pauseBtn = new ImageButton(new SpriteDrawable(new Sprite(new Texture("Buttons/GamePlay/Pause.png"))));
 
         pauseBtn.setPosition(470, 17, Align.bottomRight);
 
